@@ -27,8 +27,6 @@ public class StreamResource {
     @Autowired
     private EventBusService service;
 
-    final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
-
     @GetMapping("/stream")
     public ResponseEntity<SseEmitter> doNotify() throws IOException {
         final SseEmitter emitter = new SseEmitter();
@@ -37,6 +35,13 @@ public class StreamResource {
         emitter.onTimeout(() -> service.removeEmitter(emitter));
         return new ResponseEntity<>(emitter, HttpStatus.OK);
     }
+
+
+    @GetMapping("/session")
+    public ResponseEntity<String> sessions() {
+        return ResponseEntity.ok(String.format("Connected Users: %d",  service.emitters.size()));
+    }
+
 
 
 
